@@ -1,0 +1,25 @@
+<?php
+  // Get the reCAPTCHA response
+  $reCAPTCHA_response = $_POST['g-recaptcha-response'];
+
+  // Check if the reCAPTCHA response is valid
+  $reCAPTCHA_secret = 'your_secret_key';
+  $reCAPTCHA_verify = file_get_contents('https://www.google.com/recaptcha/api/siteverify?secret=' . $reCAPTCHA_secret . '&response=' . $reCAPTCHA_response);
+
+  // If the reCAPTCHA response is valid, send the form data via email
+  if (json_decode($reCAPTCHA_verify)->success) {
+    $name = $_POST['name'];
+    $email = $_POST['email'];
+    $subject = $_POST['subject'];
+    $message = $_POST['message'];
+
+    // Send the email
+    mail('your_email_address', $subject, $message, 'From: ' . $email);
+
+    // Display a success message
+    echo '<p>Your message has been sent!</p>';
+  } else {
+    // Display an error message
+    echo '<p>There was an error sending your message. Please try again later.</p>';
+  }
+?>
